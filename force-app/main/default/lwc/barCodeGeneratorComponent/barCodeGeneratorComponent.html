@@ -1,0 +1,19 @@
+<template>
+    <!-- Lightning card component with a title "Product Barcode" -->
+    <lightning-card title="Product Barcode">
+        <!-- Lightning layout to structure the content -->
+        <lightning-layout>
+            <!-- Container div with small padding -->
+            <div class="slds-p-around_small" >
+                <!-- Conditional rendering of a spinner based on the value of boolShowSpinner -->
+                <template if:true={boolShowSpinner}>
+                    <!-- Lightning spinner component with alternative text "Loading" and large size -->
+                    <lightning-spinner alternative-text="Loading" size="large"></lightning-spinner>
+                </template>
+            </div>
+            
+            <!-- Canvas element for rendering the barcode, with manual DOM handling specified using lwc:dom="manual" -->
+            <canvas data-id="barcode" lwc:dom="manual"></canvas>
+        </lightning-layout>
+    </lightning-card>
+</template>
