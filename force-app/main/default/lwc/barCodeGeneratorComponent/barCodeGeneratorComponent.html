@@ -1,6 +1,7 @@
 <template>
     <!-- Lightning card component with a title "Product Barcode" -->
-    <lightning-card title={productName}>
+    <lightning-card  title={productName} >
+        
         <!-- Lightning layout to structure the content -->
         <lightning-layout>
             <!-- Container div with small padding -->
@@ -14,6 +15,15 @@
             
             <!-- Canvas element for rendering the barcode, with manual DOM handling specified using lwc:dom="manual" -->
             <canvas data-id="barcode" lwc:dom="manual"></canvas>
+
+             <!-- Preview button -->
+             <lightning-button onclick={previewBarcode} label="Preview"></lightning-button>
+             
+             <!-- Image element for preview -->
+             <img src={barcodeImage} alt="Generated Barcode" class={previewClass} />
+
+             <!-- Download button -->
+             <lightning-button onclick={downloadBarcode} label="Download"></lightning-button>
         </lightning-layout>
     </lightning-card>
 </template>
