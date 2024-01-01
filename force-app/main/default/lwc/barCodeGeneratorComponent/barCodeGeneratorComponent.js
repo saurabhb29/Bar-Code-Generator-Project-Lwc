@@ -1,13 +1,26 @@
 // Import necessary Lightning elements and utilities
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api,wire } from 'lwc';
 import { loadScript } from 'lightning/platformResourceLoader';
 
 // Import the barcode resource URL defined in the static resource
 import barcode from "@salesforce/resourceUrl/barcode"; 
+import getRecordName from '@salesforce/apex/RecordNameController.getRecordName';
 
 export default class BarCodeGeneratorComponent extends LightningElement {
     // Expose the recordId as an API property to make it accessible in the Lightning App Builder
     @api recordId;
+    productName;
+
+    @wire(getRecordName, { recordId: '$recordId' })
+    wiredRecordName({ data, error }) {
+        if (data) {
+            this.productName = data;
+            this.error = undefined;
+        } else if (error) {
+            this.productName = undefined;
+            this.error = error.body.message;
+        }
+    }
 
     // Flag to track whether the script has been loaded or not
     isScriptLoaded = false;
