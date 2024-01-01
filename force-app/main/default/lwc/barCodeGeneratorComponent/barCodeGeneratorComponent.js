@@ -9,19 +9,27 @@ import getRecordName from '@salesforce/apex/RecordNameController.getRecordName';
 export default class BarCodeGeneratorComponent extends LightningElement {
     // Expose the recordId as an API property to make it accessible in the Lightning App Builder
     @api recordId;
+   // Declare a variable to store the product name.
     productName;
 
+// Wire the getRecordName function to retrieve data based on the provided recordId.
     @wire(getRecordName, { recordId: '$recordId' })
     wiredRecordName({ data, error }) {
+    // Check if data is available (successful response).
         if (data) {
+        // Assign the retrieved data to the productName variable.
             this.productName = data;
+        // Reset the error variable to undefined in case it was previously set.
             this.error = undefined;
-        } else if (error) {
+    } 
+    // Check if there is an error in the response.
+    else if (error) {
+        // Set productName to undefined in case of an error.
             this.productName = undefined;
+        // Extract and store the error message in the error variable.
             this.error = error.body.message;
         }
     }
-
     // Flag to track whether the script has been loaded or not
     isScriptLoaded = false;
 
