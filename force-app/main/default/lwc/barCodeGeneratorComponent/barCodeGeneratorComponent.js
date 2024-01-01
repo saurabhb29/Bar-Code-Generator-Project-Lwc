@@ -1,19 +1,26 @@
 // Import necessary Lightning elements and utilities
 import { LightningElement, api,wire } from 'lwc';
 import { loadScript } from 'lightning/platformResourceLoader';
+// Import NavigationMixin from Lightning Navigation Service
+import { NavigationMixin } from 'lightning/navigation';
 
 // Import the barcode resource URL defined in the static resource
 import barcode from "@salesforce/resourceUrl/barcode"; 
-import getRecordName from '@salesforce/apex/RecordNameController.getRecordName';
+import getProductRecordName from '@salesforce/apex/RecordNameController.getProductRecordName';
 
 export default class BarCodeGeneratorComponent extends LightningElement {
     // Expose the recordId as an API property to make it accessible in the Lightning App Builder
     @api recordId;
    // Declare a variable to store the product name.
 productName;
+// Variable to store the generated barcode image data URL
+barcodeImage = '';
+// CSS class to control the visibility of the preview image
+previewClass = 'slds-hide';
+
 
 // Wire the getRecordName function to retrieve data based on the provided recordId.
-@wire(getRecordName, { recordId: '$recordId' })
+@wire(getProductRecordName, { recordId: '$recordId' })
 wiredRecordName({ data, error }) {
     // Check if data is available (successful response).
     if (data) {
@@ -57,6 +64,15 @@ wiredRecordName({ data, error }) {
         this.boolShowSpinner = false;
     }
 
+    // Function to download the generated barcode
+    downloadBarcode() {
+        const link = document.createElement('a');
+        link.href = this.barcodeImage;
+        link.download = 'generated_barcode.jpg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
     // Function to generate the barcode using the JsBarcode library
     generateBarcode(){
         // Get the canvas element with the specified data-id attribute
@@ -69,5 +85,12 @@ wiredRecordName({ data, error }) {
 
         // Initialize JsBarcode (assuming there might be a typo in ".barcode")
         JsBarcode(".barcode").init(); 
+        this.barcodeImage = canvas.toDataURL('image/jpg');
     }  
+    // Function to show the preview of the generated barcode
+    previewBarcode() {
+        this.previewClass = ''; // Show the preview image
+        this.generateBarcode(); // Ensure the barcode is generated before showing the preview
+    }
+
 }
